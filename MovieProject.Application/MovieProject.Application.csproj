@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MoviePorject.Infrastructure\MovieProject.Providers.Omdb.csproj" />
     <ProjectReference Include="..\MovieProject.Application.Contracts\MovieProject.Application.Contracts.csproj" />
+    <ProjectReference Include="..\MovieProject.Providers.Omdb\MovieProject.Providers.Omdb.csproj" />
   </ItemGroup>
 
 </Project>
