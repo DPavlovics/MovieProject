@@ -15,12 +15,14 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddBlazoredLocalStorage();
+builder.Services.AddHttpClient();
 
-builder.Services.AddSingleton<IOmdbApiProvider>(s => new OmdbApiProvider(builder.Configuration["Api:ApiKey"]!, builder.Configuration["Api:BaseUrl"]!));
+builder.Services.AddSingleton<IOmdbApiProvider>(s => new OmdbApiProvider(s.GetRequiredService<IHttpClientFactory>(), builder.Configuration["Api:ApiKey"]!, builder.Configuration["Api:BaseUrl"]!));
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IQueryHistoryRepository, QueryHistoryRepository>();
 builder.Services.AddScoped<IQueryHistoryService, QueryHistoryService>();
+
 
 var app = builder.Build();
 

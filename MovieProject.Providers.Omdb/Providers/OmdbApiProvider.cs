@@ -7,7 +7,7 @@ using System.Text.Json;
 
 namespace MovieProject.Providers.Omdb.Providers
 {
-    public class OmdbApiProvider(string apiKey, string apiUrl) : IOmdbApiProvider
+    public class OmdbApiProvider(IHttpClientFactory httpClientFactory, string apiKey, string apiUrl) : IOmdbApiProvider
     {
         public async Task<BaseApiResponse<TResult>> ExecuteCall<TResult>(HttpMethodType method, string endpoint, Dictionary<string, string?>? queryParams = null, HttpContent? data = null)
         {
@@ -25,7 +25,7 @@ namespace MovieProject.Providers.Omdb.Providers
                 {
                     apiResponse.ErrorMessage = omdApiResponse?.Error;
                     return apiResponse;
-                }                
+                }
 
                 if (omdApiResponse?.Error != null || !string.Equals(omdApiResponse?.Response, true.ToString(), StringComparison.OrdinalIgnoreCase))
                 {
@@ -41,7 +41,7 @@ namespace MovieProject.Providers.Omdb.Providers
                 }
 
                 apiResponse.Result = JsonSerializer.Deserialize<TResult>(responseBody, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-                return apiResponse;                
+                return apiResponse;
             }
             catch (Exception e)
             {
@@ -50,31 +50,30 @@ namespace MovieProject.Providers.Omdb.Providers
             }
 
             return apiResponse;
-        }               
+        }
 
         private async Task<HttpResponseMessage> SendRequestAsync(HttpMethodType method, Dictionary<string, string?>? queryParams, string endpoint, HttpContent? data)
         {
-            using (var client = new HttpClient())
-            {            
-                queryParams ??= new Dictionary<string, string?>();
-                queryParams[nameof(apiKey)] = apiKey;
+            var client = httpClientFactory.CreateClient();
 
-                var uri = QueryHelpers.AddQueryString(apiUrl, queryParams);
+            queryParams ??= new Dictionary<string, string?>();
+            queryParams[nameof(apiKey)] = apiKey;
 
-                client.BaseAddress = new Uri(uri);
+            var uri = QueryHelpers.AddQueryString(apiUrl, queryParams);
 
-                switch (method)
-                {
-                    case HttpMethodType.Get:
-                        return await client.GetAsync(endpoint);
-                    case HttpMethodType.Delete:
-                        return await client.DeleteAsync(endpoint);
-                    case HttpMethodType.Post:
-                        return await client.PostAsync(endpoint, data);
-                    case HttpMethodType.Patch:
-                        var request = new HttpRequestMessage(new HttpMethod("PATCH"), endpoint) { Content = data };
-                        return await client.SendAsync(request);
-                }
+            client.BaseAddress = new Uri(uri);
+
+            switch (method)
+            {
+                case HttpMethodType.Get:
+                    return await client.GetAsync(endpoint);
+                case HttpMethodType.Delete:
+                    return await client.DeleteAsync(endpoint);
+                case HttpMethodType.Post:
+                    return await client.PostAsync(endpoint, data);
+                case HttpMethodType.Patch:
+                    var request = new HttpRequestMessage(new HttpMethod("PATCH"), endpoint) { Content = data };
+                    return await client.SendAsync(request);
             }
 
             return new HttpResponseMessage(HttpStatusCode.NotFound);
