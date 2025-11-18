@@ -1,0 +1,27 @@
+﻿@page "/"
+@rendermode InteractiveServer
+<PageTitle>Search Movie</PageTitle>
+
+<h3>Search Movie</h3>
+
+<div class="input-group mb-3 w-25">
+    <InputText @bind-Value="searchTerm" class="form-control" placeholder="Enter movie title" @onkeyup="HandleKeyDown" />
+    <button class="btn btn-outline-secondary" type="button" @onclick="SearchMovieByTitle">Search</button>
+</div>
+@if (isLoading)
+{
+    <div class="movie-card">Loading ...</div>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (movie != null)
+{
+    <hr />
+    <MovieCard Movie="movie" />
+}
+else if (hasSearched)
+{
+<p>No movie found.</p>
+}

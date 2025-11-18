@@ -1,0 +1,24 @@
+﻿@page "/query-history"
+@rendermode InteractiveServer
+
+<PageTitle>Last 5 queries</PageTitle>
+
+<h3>Last 5 queries</h3>
+
+@foreach (var item in recentSearches)
+{
+    <div>
+        <button type="button" class="btn btn-link p-0" @onclick="() => ShowMovie(item)">
+            @item.Title
+        </button>
+    </div>
+}
+
+@if (selectedMovie != null)
+{
+    <hr />
+    <MovieCard Movie="selectedMovie" />
+}
+
+
+

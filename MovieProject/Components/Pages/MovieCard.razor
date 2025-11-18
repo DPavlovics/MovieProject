@@ -1,0 +1,26 @@
+﻿@using MovieProject.Application.Contracts.Dtos.Movie
+
+@if (Movie == null)
+{
+    <p>No movie data.</p>
+}
+else
+{
+    <div class="movie-card">
+        <img src="@Movie.Poster" alt="@Movie.Title" class="poster" />
+        <div class="details">
+            <h4>@Movie.Title (@Movie.Year)</h4>
+            <p><strong>Country:</strong> @Movie.Country</p>
+            <p><strong>Actors:</strong> @Movie.Actors</p>
+            <p><strong>Language:</strong> @Movie.Language</p>
+            <p><strong>Plot:</strong> @Movie.Plot</p>
+            <p><strong>IMDb:</strong> @Movie.ImdbRating</p>
+            <p><strong>Metascore:</strong> @Movie.Metascore</p>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public MovieDto Movie { get; set; }
+}

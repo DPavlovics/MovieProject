@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MoviePorject.Infrastructure\MovieProject.Providers.Omdb.csproj" />
+    <ProjectReference Include="..\MovieProject.Application.Contracts\MovieProject.Application.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>
